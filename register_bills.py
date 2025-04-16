@@ -6,7 +6,7 @@ from send_to_sheets import send_to_google_sheets, get_existing_document_numbers
 
 
 def register_bills():
-    document_number = input("Número do Documento: ")
+    document_number = input("Número do Documento: ").strip()
 
     existing_documents = get_existing_document_numbers()
     if document_number in existing_documents:
@@ -27,7 +27,8 @@ def register_bills():
 
     for i in range(total_installments):
         due_date = first_due_date + relativedelta(months=i)
-        formatted_due_date = due_date.strftime("%d/%m/%Y")
+        #formatted_due_date = due_date.strftime("%d/%m/%Y")
+        real_due_date = due_date.date().isoformat()
         month_year = due_date.strftime("%m/%Y")
         installment_label = f"{str(i+1).zfill(2)}/{str(total_installments).zfill(2)}"
 
@@ -37,7 +38,7 @@ def register_bills():
             "Fornecedor": supplier,
             "Descrição": description,
             "Valor (R$)": installment_value,
-            "Data de Vencimento": formatted_due_date,
+            "Data de Vencimento": real_due_date,
             "Data de Pagamento": "",
             "Forma de Pagamento": payment_method,
             "Situação": "Aberto",

@@ -36,4 +36,4 @@ def get_existing_document_numbers():
 
     all_data = worksheet.get_all_records()
 
-    return [row["Número do Documento"] for row in all_data]
+    return [str(row["Número do Documento"]).strip() for row in all_data if "Número do Documento" in row]
