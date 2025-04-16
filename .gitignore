@@ -1,2 +1,5 @@
 config/credentials.json
 boletos.csv
+__pycache__/
+*.pyc
+venv/
