@@ -37,3 +37,23 @@ def get_existing_document_numbers():
     all_data = worksheet.get_all_records()
 
     return [str(row["Número do Documento"]).strip() for row in all_data if "Número do Documento" in row]
+
+def get_next_id():
+    credentials_path = "config/credentials.json"
+    scope = [
+        "https://spreadsheets.google.com/feeds",
+        "https://www.googleapis.com/auth/drive"
+    ]
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(credentials_path, scope)
+    client = gspread.authorize(credentials)
+
+    spreadsheet = client.open("Boletos Loja")
+    worksheet = spreadsheet.worksheet("Página1")
+
+    all_data = worksheet.get_all_records()
+
+    if not all_data:
+        return 1
+
+    ids = [int(row["ID"]) for row in all_data if "ID" in row and str(row["ID"]).isdigit()]
+    return max(ids) + 1 if ids else 1

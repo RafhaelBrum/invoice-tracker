@@ -2,7 +2,8 @@ import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import os
-from send_to_sheets import send_to_google_sheets, get_existing_document_numbers
+from send_to_sheets import send_to_google_sheets, get_existing_document_numbers, get_next_id
+
 
 
 def register_bills():
@@ -24,6 +25,7 @@ def register_bills():
     first_due_date = datetime.strptime(first_due_date_str, "%d/%m/%Y")
 
     rows = []
+    base_id = get_next_id()
 
     for i in range(total_installments):
         due_date = first_due_date + relativedelta(months=i)
@@ -33,6 +35,7 @@ def register_bills():
         installment_label = f"{str(i+1).zfill(2)}/{str(total_installments).zfill(2)}"
 
         rows.append({
+            "ID": base_id + i,
             "Número do Documento": document_number,
             "Mês/Ano": month_year,
             "Fornecedor": supplier,
