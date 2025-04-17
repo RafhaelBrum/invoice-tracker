@@ -1,4 +1,4 @@
-# Invoice Tracker - Auto Peças Brum
+# Invoice Tracker
 
 This is an invoice tracking system developed in Python with Google Sheets integration, designed to manage payments for a store, but can also be used for personal purposes. It allows you to manually register invoices via the terminal, automatically generates installments, and saves them to a Google Sheets spreadsheet.
 
