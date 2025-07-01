@@ -1,10 +1,7 @@
 import pandas as pd
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
 import os
 from send_to_sheets import send_to_google_sheets, get_existing_document_numbers, get_next_id
-
-
 
 def register_bills():
     document_number = input("Número do Documento: ").strip()
@@ -18,30 +15,26 @@ def register_bills():
     description = input("Descrição: ")
     installment_value = float(input("Valor da parcela (use ponto, ex: 300.00): "))
     total_installments = int(input("Número de parcelas: "))
-    first_due_date_str = input("Data do 1º vencimento (formato DD/MM/AAAA): ")
     payment_method = input("Forma de pagamento (ex: Boleto, Pix): ")
     notes = input("Observações (pressione Enter se não tiver): ")
 
-    first_due_date = datetime.strptime(first_due_date_str, "%d/%m/%Y")
-
-    rows = []
     base_id = get_next_id()
+    rows = []
 
     for i in range(total_installments):
-        due_date = first_due_date + relativedelta(months=i)
-        #formatted_due_date = due_date.strftime("%d/%m/%Y")
-        real_due_date = due_date.date().isoformat()
+        due_date_str = input(f"Data da parcela {i+1} (formato DD/MM/AAAA): ")
+        due_date = datetime.strptime(due_date_str, "%d/%m/%Y").date()
         month_year = due_date.strftime("%m/%Y")
         installment_label = f"{str(i+1).zfill(2)}/{str(total_installments).zfill(2)}"
 
         rows.append({
-            "ID": base_id + i,
+            "ID": base_id + i + 1,
             "Número do Documento": document_number,
             "Mês/Ano": month_year,
             "Fornecedor": supplier,
             "Descrição": description,
-            "Valor (R$)": installment_value,
-            "Data de Vencimento": real_due_date,
+            "Valor (R$)": f"{installment_value:.2f}".replace('.', ','),
+            "Data de Vencimento": due_date.isoformat(),
             "Data de Pagamento": "",
             "Forma de Pagamento": payment_method,
             "Situação": "Aberto",
